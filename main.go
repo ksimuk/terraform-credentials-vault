@@ -42,8 +42,9 @@ func main() {
 		hostname := values[1]
 		wantedHost := svchost.Hostname(hostname)
 
-		secretPath := fmt.Sprintf("%s/%s", *vaultBasePath, hostname)
-		secret, err := readSecretFromVault(secretPath)
+		fmt.Fprintf(os.Stderr, "Reading secret from Vault at %s\n", *vaultBasePath)
+		secret, err := readSecretFromVault(*vaultBasePath)
+		fmt.Fprintf(os.Stderr, "secret %s\n", secret)
 		if err != nil {
 			fmt.Fprintf(os.Stderr, "Unable to read secret from Vault: %s", err)
 			os.Exit(1)
@@ -118,7 +119,6 @@ func readSecretFromVault(secretPath string) (string, error) {
 	} else {
 		return "", errors.Wrap(err, "failed to get token from environment or credential helper")
 	}
-
 	secret, err := client.Logical().Read(secretPath)
 	if err != nil {
 		fmt.Println("in if err == nil")
@@ -130,10 +130,8 @@ func readSecretFromVault(secretPath string) (string, error) {
 		return "", nil
 	}
 
-	m, ok := secret.Data["data"].(map[string]interface{})
-	if !ok {
-		return "", fmt.Errorf("unable to map secret data")
-	}
+	m := secret.Data
+
 	s := fmt.Sprintf("%v", m["token"])
 
 	if s == "" {
