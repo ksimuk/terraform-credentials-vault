@@ -3,7 +3,7 @@ module github.com/ksimuk/terraform-credentials-vault
 go 1.20
 
 require (
-	github.com/hashicorp/terraform-svchost v0.0.0-20200729002733-f050f53b9734
+	github.com/hashicorp/terraform-svchost v0.1.1
 	github.com/hashicorp/vault v1.14.0
 	github.com/hashicorp/vault/api v1.9.2
 	github.com/pkg/errors v0.9.1
